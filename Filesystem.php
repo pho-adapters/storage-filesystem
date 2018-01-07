@@ -46,15 +46,15 @@ class Filesystem implements StorageInterface, ServiceInterface
      * Constructor.
      * 
      * @param Kernel $kernel The Pho Kernel to access services
-     * @param array $params Must include the directory to store files with the key "path". For example /var/pho/storage (for UNIX) or c:\Pho\Storage (for Windows)
+     * @param string $uri Points to the directory where uploaded files will reside. For example /var/pho/storage (for UNIX) or c:\Pho\Storage (for Windows)
      */
-    public function __construct(Kernel $kernel, array $params = [])
+    public function __construct(Kernel $kernel, string $uri = "")
     {
         $this->kernel = $kernel;
-        if (!isset($params["path"])) {
+        if (!isset($uri) || empty($uri)) {
             $this->root = $kernel->config()->tmp_path . DIRECTORY_SEPARATOR . "pho";
         } else {
-            $this->root = $params["path"];
+            $this->root = $uri;
         }
         if (!file_exists($this->root)&&!mkdir($this->root)) {
             throw new InaccessiblePathException($this->root);
